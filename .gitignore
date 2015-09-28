@@ -1,6 +1,14 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+!*.pyx
+
+# Local building and testing
+test.sh
+
+
+# Virtual Environment
+venv/
 
 # C extensions
 *.so
