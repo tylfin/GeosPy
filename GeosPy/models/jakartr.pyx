@@ -12,7 +12,7 @@ cdef class Jakartr:
     making it a natural base model to use for testing
     """
     # private constant Jakartr's latitude and longitude
-    cdef tuple JAKARTA_LAT_LON 
+    cdef inline tuple JAKARTA_LAT_LON 
 
     def __cinit__(self):
         """C initialization"""
