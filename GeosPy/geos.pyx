@@ -14,8 +14,11 @@ import sys, inspect
 from GeosPy.models import *
 
 cdef class Geospy:
+    """Main class in geosPy application that will act as a wrapper for models"""
     # public list that contains all available models (imported above)
     cdef public object models 
+    cdef public object model
+    cdef object _model
 
     def __init__(self, model = None):
         """Initializer for GeosPy main class"""
@@ -27,17 +30,40 @@ cdef class Geospy:
             # then attempt to set that model
             self.set_model(model)
 
-    def set_model(self, model):
+    cpdef set_model(self, model):
         """set_model sets the model to be used by Geospy class"""
         # if the model is in models
-        if model in self.models:
+        if model.lower() in self.models:
             # set the model string to model name
             self.model = model
             # and load the model through raw eval
-            self._model = eval(self.model)
+            self._model = eval(self.model.title())()
         else:
             # else the user passed a model not loaded / failed to load - either way raise NameError
             raise NameError("Model '{0}' is not defined. \nAvailable model(s):\n {1}".format(model, self.models))
+
+    cpdef public train(self, user_location_dict, user_friend_dict):
+        """extended by models to allow for supervised/semi-supervised learning features"""
+        return self._model_call('train', user_location_dict, user_friend_dict)
+
+    cpdef public locate(self, user_location_dict, user_friend_dict):
+        """extended by models to locate users given a full user dict and friend dict of freezedsets"""
+        # freezed sets because relationships do not change
+        return self._model_call('locate', user_location_dict, user_friend_dict)
+
+    # this is called "badass polymorphism"...
+    cdef object _model_call(self, object function, object user_location_dict, object user_friend_dict):
+        # if the model has not been set
+        if self._model is None:
+            # raise UnboundLocalError with description,
+            raise UnboundLocalError("A model has not been selected")
+        # if the model does not have the attribute error 
+        elif not hasattr(self._model, function):
+            # raise attribute error with description on the attribute not available
+            raise AttributeError("The selected model does not extend {0}".format(function))
+        else:
+            # otherwise we call the function on the instantiated model
+            return getattr(self._model, function)(user_location_dict, user_friend_dict)
 
     cdef object _get_models(self, object class_members, int new_list_length):
         """_get_models is an internal function to find all imported models""" 
@@ -62,4 +88,4 @@ cdef class Geospy:
                 # increment the position counter only if an item is added to models
                 position += 1
         # C-Array -> Python List conversion 
-        return [str(models[i], 'UTF-8') for i in range(new_list_length-1)]
+        return [str(models[i], 'UTF-8').lower() for i in range(new_list_length-1)]

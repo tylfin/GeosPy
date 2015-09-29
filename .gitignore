@@ -6,12 +6,16 @@ __pycache__/
 # Local building and testing
 test.sh
 
+# UNIX file system junk
+.DS_store
 
 # Virtual Environment
 venv/
 
 # C extensions
 *.so
+*.c
+*.o
 
 # Distribution / packaging
 .Python
