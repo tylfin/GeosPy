@@ -16,9 +16,9 @@ from GeosPy.models import *
 cdef class Geospy:
     """Main class in geosPy application that will act as a wrapper for models"""
     # public list that contains all available models (imported above)
-    cdef public object models 
-    cdef public object model
-    cdef object _model
+    cdef readonly object models 
+    cdef readonly object model
+    cdef inline object _model
 
     def __init__(self, model = None):
         """Initializer for GeosPy main class"""
@@ -52,7 +52,7 @@ cdef class Geospy:
         return self._model_call('locate', user_location_dict, user_friend_dict)
 
     # this is called "badass polymorphism"...
-    cdef object _model_call(self, object function, object user_location_dict, object user_friend_dict):
+    cdef inline object _model_call(self, object function, object user_location_dict, object user_friend_dict):
         # if the model has not been set
         if self._model is None:
             # raise UnboundLocalError with description,
@@ -65,7 +65,7 @@ cdef class Geospy:
             # otherwise we call the function on the instantiated model
             return getattr(self._model, function)(user_location_dict, user_friend_dict)
 
-    cdef object _get_models(self, object class_members, int new_list_length):
+    cdef inline object _get_models(self, object class_members, int new_list_length):
         """_get_models is an internal function to find all imported models""" 
         # define integers position, and i for array manipulation,
         cdef int position, i
@@ -88,4 +88,8 @@ cdef class Geospy:
                 # increment the position counter only if an item is added to models
                 position += 1
         # C-Array -> Python List conversion 
-        return [str(models[i], 'UTF-8').lower() for i in range(new_list_length-1)]
+        result = [str(models[i], 'UTF-8').lower() for i in range(new_list_length-1)]
+        # free the allocated memory
+        free(models)
+        # return the result
+        return result

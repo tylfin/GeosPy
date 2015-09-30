@@ -16,7 +16,7 @@ class TestGeosPy(unittest.TestCase):
     def test_fail_init_display_models(self):
         """ensuring error handling on passing a model that doesn't exist"""
         with self.assertRaises(NameError):
-            elf.geospy("fail")
+            self.geospy("fail")
 
     def test_should_display_jakartr(self):
         """ensuring Jakartr, the test class is available"""
