@@ -1,1 +1,1 @@
-from .geos import *
+from GeosPy.geos import Geos

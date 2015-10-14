@@ -4,9 +4,11 @@
   All rights reserved. See LICENSE file for details
 """
 # Setup config from http://docs.cython.org
-from distutils.core import setup
-from Cython.Build import cythonize
 from distutils.extension import Extension
+from distutils.core import setup
+# Import Cython
+from Cython.Build import cythonize
+# Import numpy
 import numpy as np
 
 # extensions to compile
@@ -24,6 +26,7 @@ extensions=[
         include_dirs=[np.get_include()],
         extra_compile_args=["-w"])
     ]
+
 # full config
 config = {
     'description': 'GeosPy',
@@ -31,11 +34,13 @@ config = {
     'url': 'https://github.com/tylfin/GeosPy',
     'download_url': 'https://github.com/tylfin/GeosPy',
     'author_email': 'tylfin@gmail.com',
-    'version': '0.3',
-    'packages': ['GeosPy'],
+    'cmdclass': {'test': None},
+    'version': '0.4',
+    'packages': ['GeosPy', 'GeosPy.utilities', 'GeosPy.models'],
     'scripts': [],
     'name': 'GeosPy',
     'ext_modules':cythonize(extensions)
 }
+
 # setting up
 setup(**config)

@@ -13,20 +13,22 @@ import sys, inspect
 # Model imports
 from GeosPy.models import *
 
-cdef class Geospy:
+MODELS = frozenset(['backstrom', 'jakartr'])
+
+cdef class Geos:
     """Main class in geosPy application that will act as a wrapper for models"""
     # public list that contains all available models (imported above)
-    cdef readonly object models 
+    cdef readonly object models
     cdef readonly object model
     cdef inline object _model
+    cdef object result
 
     def __init__(self, model = None):
         """Initializer for GeosPy main class"""
-        # finding imported 
-        class_members = inspect.getmembers(sys.modules[__name__], inspect.isclass)
-        self.models = self._get_models(class_members, len(class_members))
+        # set models to hardcoded frozenset of available models
+        self.models = MODELS
         # if a model has been passed in on initialization,
-        if model: 
+        if model:
             # then attempt to set that model
             self.set_model(model)
 
@@ -57,39 +59,10 @@ cdef class Geospy:
         if self._model is None:
             # raise UnboundLocalError with description,
             raise UnboundLocalError("A model has not been selected")
-        # if the model does not have the attribute error 
+        # if the model does not have the attribute error
         elif not hasattr(self._model, function):
             # raise attribute error with description on the attribute not available
             raise AttributeError("The selected model does not extend {0}".format(function))
         else:
             # otherwise we call the function on the instantiated model
             return getattr(self._model, function)(user_location_dict, user_friend_dict)
-
-    cdef inline object _get_models(self, object class_members, int new_list_length):
-        """_get_models is an internal function to find all imported models""" 
-        # define integers position, and i for array manipulation,
-        cdef int position, i
-        # create c string for storing pythonic-strings in
-        cdef char* c_string
-        # create c array allocating enough memory for the names of all models
-        cdef char **models = <char **>malloc(cython.sizeof(new_list_length - 1))
-        # if the memory has not been properly allocated, raise a MemoryError
-        if models is NULL:
-            raise MemoryError()
-        # position is the position in the models array that will be returned
-        position = 0
-        # i is the position in the class_members array that will be iterated over
-        for i in range(new_list_length):
-            if class_members[i][0] is not "Geospy":
-                # tmp variable, need to encode string -> byte for safe storage in array 
-                py_byte_string = class_members[i][0].encode('UTF-8')
-                c_string = py_byte_string
-                models[position] = c_string
-                # increment the position counter only if an item is added to models
-                position += 1
-        # C-Array -> Python List conversion 
-        result = [str(models[i], 'UTF-8').lower() for i in range(new_list_length-1)]
-        # free the allocated memory
-        free(models)
-        # return the result
-        return result

@@ -1,7 +1,26 @@
 language: python
+cache:
+  - pip
+# whitelist
+branches:
+    only:
+        - master
+# specifying OS (travis osx python build was broken 10/14/15)
+os:
+  - linux
+# versions of python
 python:
-  - "3.5"
+  - '3.3'
+  - '3.4'
+  - '3.5'
 # command to install dependencies
-install: "pip install -r requirements.txt"
+install:
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+# building the cython files
+before_script:
+ - python setup.py build_ext --inplace
 # command to run tests
-script: python -m unittest discover ./tests/ "*.py"
+script:
+  - python -m unittest
+# cache pip installs (cython takes awhile to build), after script

@@ -6,12 +6,12 @@
 # import the unittest class that TestGeosPy will inherit
 import unittest
 # import the main class
-from GeosPy import Geospy
+from GeosPy import Geos
 
 class TestBackstrom(unittest.TestCase):
     def setUp(self):
         """setUp creates the class instance of GeosPy"""
-        self.geospy = Geospy
+        self.geospy = Geos
 
     def test_should_have_model_backstrom(self):
         """ensuring Jakartr, the test class is available"""

@@ -3,5 +3,5 @@
 
   All rights reserved. See LICENSE file for details
 """
-from .jakartr import *
-from .backstrom import *
+from GeosPy.models.jakartr import *
+from GeosPy.models.backstrom import *

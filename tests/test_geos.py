@@ -6,12 +6,12 @@
 # import the unittest class that TestGeosPy will inherit
 import unittest
 # import the main class
-from GeosPy import Geospy
+from GeosPy import Geos
 
 class TestGeosPy(unittest.TestCase):
     def setUp(self):
         """setUp creates the class instance of GeosPy"""
-        self.geospy = Geospy
+        self.geospy = Geos
 
     def test_fail_init_display_models(self):
         """ensuring error handling on passing a model that doesn't exist"""
@@ -22,9 +22,13 @@ class TestGeosPy(unittest.TestCase):
         """ensuring Jakartr, the test class is available"""
         self.assertTrue('jakartr' in self.geospy().models)
 
-    def test_set_model_to_jakartr(self):
-        """testing set_model function"""
+    def test_set_model_to_jakartr_on_init(self):
+        """testing that model can be set on initialization"""
         self.geospy('jakartr')
+
+    def test_set_model_to_jakart_on_func_call(self):
+        """testing set_model function after initialization"""
+        self.geospy().set_model('jakartr')
 
     def test_locate_function(self):
         """testing locate function for jakartr model"""

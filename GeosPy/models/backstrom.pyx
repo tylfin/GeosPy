@@ -9,11 +9,11 @@ cimport cython
 from libc.math cimport log, sin, cos, acos
 from libc.math cimport abs as ABS
 from libc.math cimport pow as POW
-from ..utilities.distance cimport distance
+from GeosPy.utilities.distance cimport distance
 
 cdef class Backstrom:
     """
-    Backstrom implementation based on: "Find me if you can: improving geographical 
+    Backstrom implementation based on: "Find me if you can: improving geographical
     prediction with social and spatial proximity"
 
     See link to paper for more details:
@@ -30,7 +30,7 @@ cdef class Backstrom:
 
     cpdef public locate(self, object user_location_dict, object user_friend_dict):
         """returns the approximate location for users without locations"""
-        return self._run(user_location_dict, user_friend_dict)             
+        return self._run(user_location_dict, user_friend_dict)
 
     cpdef public train(self, object user_location_dict, object user_friend_dict):
         """trains the backstrom method to overwrite default constants from paper"""
@@ -57,7 +57,7 @@ cdef class Backstrom:
                 # loop through the neighbors of the user
                 for neighbor_v in neighbors:
                     # same as for nb_u
-                    if neighbor_v is neighbor_u or neighbor_v not in user_location_dict or not user_location_dict[neighbor_v]: 
+                    if neighbor_v is neighbor_u or neighbor_v not in user_location_dict or not user_location_dict[neighbor_v]:
                         continue
                     # same as for nb_u
                     nb_v_loc = user_location_dict[neighbor_v]
