@@ -1,6 +1,9 @@
 GeosPy: Geolocation Inference Made Easy
 =======================================
 
+.. image:: https://travis-ci.org/tylfin/GeosPy.svg?branch=master
+    :target: https://travis-ci.org/tylfin/GeosPy
+
 GeosPy is a MIT Licensed Geolocation Inference Library, written in Python.
 
 Of the few existing Python modules for conducting geolocation inference,
@@ -48,9 +51,9 @@ Contribute
 ----------
 
 #. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
-#. Fork `the repository`_ on GitHub to start making your changes to the **master** branch (or branch off of it).
+#. Fork `the repository` on GitHub to start making your changes to the **master** branch (or branch off of it).
 #. Write a test which shows that the bug was fixed or that the feature works as expected.
-#. Send a pull request and bug the maintainer until it gets merged and published. Make sure to add yourself to AUTHORS_.
+#. Send a pull request and bug the maintainer until it gets merged and published. Make sure to add yourself to AUTHORS.
 
-.. `the repository`_: http://github.com/tylfin/GeosPy
-.. AUTHORS_: https://github.com/tylfin/GeosPy/blob/master/AUTHORS
+.. `the repository`: http://github.com/tylfin/GeosPy
+.. AUTHORS: https://github.com/tylfin/GeosPy/blob/master/AUTHORS
