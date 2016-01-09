@@ -12,7 +12,7 @@ cdef inline double deg2rad(double deg):
 # radian to degree converter
 cdef inline double rad2deg(double rad):
     return (rad * 180 / PI);
-# simple latitude distance calculator
+# simple latitude distance calculator in miles
 cdef inline double distance(double lat1, double lon1, double lat2, double lon2):
     cdef double theta, dist
     theta = lon1 - lon2;
@@ -20,3 +20,6 @@ cdef inline double distance(double lat1, double lon1, double lat2, double lon2):
     dist = acos(dist)
     dist = rad2deg(dist)
     return (dist * 60 * 1.1515)
+
+cpdef distance_test(lat1, lon1, lat2, lon2):
+  return distance(lat1, lon1, lat2, lon2)
