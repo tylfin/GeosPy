@@ -12,7 +12,7 @@ most are verbose and cumbersome.
     >>> geosPy = Geos()
     >>> print geosPy.models
     ['jakartr', 'backstrom']
-    >>> geosPy.set_model('backstrom')
+    >>> geosPy = geosPy.set_model('backstrom')
     >>> print geosPy.locate(user_location_dict, user_friend_dict)
     (45.5064721, -73.5768498)
     ...

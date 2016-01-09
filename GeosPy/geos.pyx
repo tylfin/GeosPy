@@ -40,6 +40,8 @@ cdef class Geos:
             self.model = model
             # and load the model through raw eval
             self._model = eval(self.model.title())()
+            # return the class with the initialized model
+            return self
         else:
             # else the user passed a model not loaded / failed to load - either way raise NameError
             raise NameError("Model '{0}' is not defined. \nAvailable model(s):\n {1}".format(model, self.models))

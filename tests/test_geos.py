@@ -24,11 +24,17 @@ class TestGeosPy(unittest.TestCase):
 
     def test_set_model_to_jakartr_on_init(self):
         """testing that model can be set on initialization"""
-        self.geospy('jakartr')
+        model = 'jakartr'
+        self.geospy = self.geospy(model)
+        self.assertTrue(isinstance(self.geospy, Geos))
+        self.assertEqual(self.geospy.model, model)
 
     def test_set_model_to_jakart_on_func_call(self):
         """testing set_model function after initialization"""
-        self.geospy().set_model('jakartr')
+        model = 'jakartr'
+        self.geospy = self.geospy().set_model(model)
+        self.assertTrue(isinstance(self.geospy, Geos))
+        self.assertEqual(self.geospy.model, model)
 
     def test_locate_function(self):
         """testing locate function for jakartr model"""
