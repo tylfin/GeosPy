@@ -9,7 +9,13 @@ cimport cython
 from libc.math cimport log, sin, cos, acos
 from libc.math cimport abs as cabs
 from libc.math cimport pow as cpow
+from libc.math cimport round as cround
+# cimport GeosPy.utilities.levmarq
 from GeosPy.utilities.distance cimport distance
+# python packages
+from collections import defaultdict
+# from scipy.optimize import curve_fit
+import numpy as np
 
 cdef class Backstrom:
     """
@@ -81,6 +87,7 @@ cdef class Backstrom:
         """
         _train computes new coefficients for the Backstrom method based on
         Probability of friendship as a function of distance.
+
         By computing the number of pairs of individuals at varying distances,
         along with the number of friends at those distances,
         we are able to compute the probability of two people at distance d knowing each other.
@@ -91,20 +98,37 @@ cdef class Backstrom:
             node_location in node_location_dict.items() if node_location]
         # precompute the normalized additive amount
         size = len(nodes_with_location)
+        # raise an error if there are no nodes with location data
+        if size == 0: raise ValueError("No location information passed!")
+        # smoothing additive
         additive = (1.0/size)
-
-        if size == 0:
-          raise ValueError("No location information passed!")
-
+        bucketed_distances = defaultdict(float)
+        # for each node with a location
         for node in nodes_with_location:
-            if node not in node_relationship_dict:
-              continue
-            node_location = node_relationship_dict[node]
-            for neighbor_node in node_relationship_dict[node]:
-                if neighbor_node not in node_relationship_dict:
-                    continue
-                neighbor_location = node_relationship_dict[neighbor_node]
-                if not neighbor_location: continue
+          if node not in node_relationship_dict:
+            continue
+          # grab its location
+          node_location = node_location_dict[node]
+          # for each neighbor
+          for neighbor_node in node_relationship_dict[node]:
+            if neighbor_node not in node_location_dict:
+                continue
+            neighbor_location = node_location_dict[neighbor_node]
+            if not neighbor_location: continue
+            # unpack the locations
+            u_lat, u_lon = node_location
+            v_lat, v_lon = neighbor_location
+            node_neighbor_distance = distance(u_lat, u_lon, v_lat, v_lon)
+            # Backstrom et al. bucket the distances in 1/10 mile increments
+            bucketed_distance = round(node_neighbor_distance, 1)
+            # add the bucketed distance to the bucketed distances dictionary
+            # to keep track # of friends at what distances
+            bucketed_distances[bucketed_distance] += additive
+
+        _distances = np.array([_distance for _distance in bucketed_distances.items()])
+        _locations = np.array([_location for _location in bucketed_distances.items()])
+
+        # curve_fit(self._test_function_to_fit, _distances, _locations)
         return
 
     def _test_function_to_fit(self, x, a, b, c):
@@ -122,59 +146,9 @@ cdef class Backstrom:
     cdef inline _calculate_probability(self, nb_u_loc, nb_v_loc):
       """
       Probability function from Backstrom
-      For each friend v of u whose location lv is known, we can
+
+      For each neighbor nb_v of nb_u whose location nb_v_loc is known, we can
       compute the probability of the edge being present given the
       distance between u and v
       """
       return self.A * cpow(cabs(distance(nb_u_loc[0], nb_u_loc[1], nb_v_loc[0], nb_v_loc[1]) + self.B), self.C)
-
-  # def compute_coefficients(self):
-  #   """
-  #   From the paper:
-  #   Probability of friendship as a function of distance.
-  #   By computing the number of pairs of individuals at varying distances,
-  #   along with the number of friends at those distances,
-  #   we are able to compute the probability of two people at distance d knowing each other.¡
-  #   We see here that it is a reasonably good fit to a power-law with exponent near 1.
-  #   """
-  #   def func_to_fit(x,a,b,c):
-  #       return a * (x + b)**c
-  #
-  #   size = len(self.nodes_with_data)
-  #   fitting_dictionary = defaultdict(float)
-  #
-  #
-  #   logger.debug('Inferring coefficients from %d users with locations' % size)
-  #
-  #
-  #   # Sanity check to ensure that at least one node has location data
-  #   if size == 0:
-  #       return
-  #
-  #   additive = (1.0/size) #precompute the normalized additive amount
-  #
-  #   for node in self.nodes_with_data:
-  #       location_u = self.G.node_data(node)
-  #       for neighbor in self.G.neighbors_iter(node):
-  #           location_v = self.G.node_data(neighbor)
-  #           if not location_v: continue
-  #           distance = haversine(location_u,location_v,miles=True)
-  #           # Backstrom et al. bucket the distances in 1/10 mile increments
-  #           # which we do here
-  #           bucketed_distance = round(distance, 1)
-  #           fitting_dictionary[bucketed_distance] += additive
-  #
-  #   x = np.array(sorted([key for key in fitting_dictionary]))
-  #   y = np.array([fitting_dictionary[key] for key in x])
-  #
-  #   ##curve_fit, if this seems problematic finding a different fitting
-  #   ##function may be necessary..?  works by Levenberg-Marquardt algorithm
-  #   ##(LMA) used to solve non-linear least square problems so it should be
-  #   ##quite fitting ;)
-  #   solutions = curve_fit(func_to_fit,x,y,maxfev=100000)[0]
-  #   self.a = solutions[0]
-  #   self.b = solutions[1]
-  #   self.c = solutions[2]
-  #
-  #   logger.debug('Found coefficients a=%f, b=%f, c=%f' % (self.a, self.b, self.c))
-  #   return
