@@ -7,8 +7,8 @@
 cimport cython
 # C math library, importing natural log
 from libc.math cimport log, sin, cos, acos
-from libc.math cimport abs as ABS
-from libc.math cimport pow as POW
+from libc.math cimport abs as cabs
+from libc.math cimport pow as cpow
 from GeosPy.utilities.distance cimport distance
 
 cdef class Backstrom:
@@ -107,14 +107,26 @@ cdef class Backstrom:
                 if not neighbor_location: continue
         return
 
+    def _test_function_to_fit(self, x, a, b, c):
+      """wrapper function for calculate probability"""
+      return self._function_to_fit(x, a, b, c)
+
     cdef inline float _function_to_fit(self, float x, float a, float b, float c):
-        """Function as defined in backstrom, three DOE to fit"""
-        return a * POW((x + b), c)
+      """Function as defined in backstrom, three DOE to fit"""
+      return a * cpow((x + b), c)
+
+    def _test_calculate_probability(self, nb_u_loc, nb_v_loc):
+      """wrapper function for test probability """
+      return self._calculate_probability(nb_u_loc, nb_v_loc)
 
     cdef inline _calculate_probability(self, nb_u_loc, nb_v_loc):
-        return self.A * POW(ABS(distance(nb_u_loc[0], nb_u_loc[1], nb_v_loc[0],
-            nb_v_loc[1]) + self.B), self.C)
-
+      """
+      Probability function from Backstrom
+      For each friend v of u whose location lv is known, we can
+      compute the probability of the edge being present given the
+      distance between u and v
+      """
+      return self.A * cpow(cabs(distance(nb_u_loc[0], nb_u_loc[1], nb_v_loc[0], nb_v_loc[1]) + self.B), self.C)
 
   # def compute_coefficients(self):
   #   """
@@ -122,7 +134,7 @@ cdef class Backstrom:
   #   Probability of friendship as a function of distance.
   #   By computing the number of pairs of individuals at varying distances,
   #   along with the number of friends at those distances,
-  #   we are able to compute the probability of two people at distance d knowing each other.
+  #   we are able to compute the probability of two people at distance d knowing each other.¡
   #   We see here that it is a reasonably good fit to a power-law with exponent near 1.
   #   """
   #   def func_to_fit(x,a,b,c):

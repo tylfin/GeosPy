@@ -7,7 +7,7 @@
 import unittest
 # import the main class
 from GeosPy import Geos
-from GeosPy.models import backstrom
+from GeosPy.models import Backstrom
 
 class TestBackstrom(unittest.TestCase):
     def setUp(self):
@@ -60,7 +60,7 @@ class TestBackstrom(unittest.TestCase):
             '3':frozenset(['1','3','6'])}
         self.geospy = self.geospy().set_model('backstrom')
         output = self.geospy.train(user_location_dict, user_friend_dict)
-        print(output)
+        # print(output)
         # self.assertEqual(output['2'], (0,0))
 
     def test_backstrom_train_throw_error(self):
@@ -68,3 +68,25 @@ class TestBackstrom(unittest.TestCase):
         self.geospy = self.geospy().set_model('backstrom')
         with self.assertRaises(ValueError):
             self.geospy.train({},{})
+
+    def test_backstrom_func_to_fit(self):
+        backstrom = Backstrom()
+        func_to_fit = backstrom._test_function_to_fit
+        A, B, C = 0.0019, 0.196, -0.015
+        self.assertAlmostEqual(func_to_fit(1,A,B,C), 0.00189491)
+
+    def test_backstrom_calculate_probability(self):
+        backstrom = Backstrom()
+        calculate_probability = backstrom._test_calculate_probability
+        # 35.5800° N, -82.5558° W
+        nb_u_loc = (35.5800, -82.5558)
+        # 35.0117° N, 135.7683° E
+        nb_v_loc = (35.0117, 135.7683)
+        # 2970 miles
+        expected_probability_with_defaults = 0.00166376
+        calculated_probability_with_defaults = calculate_probability(nb_u_loc,
+            nb_v_loc)
+        # assertAlmostEqual with 6 decimal places of accuracy as externally
+        # calculated given error propogation
+        self.assertAlmostEqual(calculated_probability_with_defaults,
+            expected_probability_with_defaults, places=6)
