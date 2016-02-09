@@ -6,16 +6,20 @@
 # Cythonized Asset object.
 cimport cython
 # C math library, importing natural log
-from libc.math cimport log, sin, cos, acos
+from libc.math cimport log as clog
 from libc.math cimport abs as cabs
 from libc.math cimport pow as cpow
 from libc.math cimport round as cround
-# cimport GeosPy.utilities.levmarq
+# GeosPy utilities
 from GeosPy.utilities.distance cimport distance
 # python packages
 from collections import defaultdict
-# from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit
+from functools import partial
 import numpy as np
+
+# ignore numpy settings
+np.seterr(all='ignore')
 
 cdef class Backstrom:
     """
@@ -26,13 +30,16 @@ cdef class Backstrom:
     http://dl.acm.org/citation.cfm?id=1772698
     """
     # cdef tuple FOOBAR
-    cdef inline float A, B, C
+    cdef public inline float A, B, C
 
     def __cinit__(self):
         """C initialization"""
         self.A = 0.0019
         self.B = 0.196
         self.C = -0.015
+
+    cpdef public get_params(self):
+      return (self.A, self.B, self.C)
 
     cpdef public locate(self, object user_location_dict, object user_friend_dict):
         """returns the approximate location for users without locations"""
@@ -72,7 +79,7 @@ cdef class Backstrom:
                     # same as for nb_u
                     nb_v_loc = user_location_dict[neighbor_v]
                     probability = self._calculate_probability(nb_u_loc, nb_v_loc)
-                    likelihood = log(probability) - log(1-probability)
+                    likelihood = clog(probability) - clog(1-probability)
                     # sum over the likelihood probabilities
                     total_likelihood += (likelihood)
                 # check if greater than maximum likelihood
@@ -112,7 +119,7 @@ cdef class Backstrom:
           # for each neighbor
           for neighbor_node in node_relationship_dict[node]:
             if neighbor_node not in node_location_dict:
-                continue
+              continue
             neighbor_location = node_location_dict[neighbor_node]
             if not neighbor_location: continue
             # unpack the locations
@@ -124,20 +131,17 @@ cdef class Backstrom:
             # add the bucketed distance to the bucketed distances dictionary
             # to keep track # of friends at what distances
             bucketed_distances[bucketed_distance] += additive
+        # grab the distances and values of the bucketed distances
+        _distances = np.array([_distance for _distance in bucketed_distances.values()])
+        _values = np.array([_value for _value in bucketed_distances.keys()])
 
-        _distances = np.array([_distance for _distance in bucketed_distances.items()])
-        _locations = np.array([_location for _location in bucketed_distances.items()])
+        self.A, self.B, self.C = curve_fit(self._function_to_fit, _distances,
+          _values, p0=(self.A, self.B, self.C), maxfev=5000)[0]
 
-        # curve_fit(self._test_function_to_fit, _distances, _locations)
-        return
+        return self
 
-    def _test_function_to_fit(self, x, a, b, c):
-      """wrapper function for calculate probability"""
-      return self._function_to_fit(x, a, b, c)
-
-    cdef inline float _function_to_fit(self, float x, float a, float b, float c):
-      """Function as defined in backstrom, three DOE to fit"""
-      return a * cpow((x + b), c)
+    cpdef _function_to_fit(self, x, a, b, c):
+      return a * (x+b)**c
 
     def _test_calculate_probability(self, nb_u_loc, nb_v_loc):
       """wrapper function for test probability """

@@ -67,6 +67,3 @@ docs/_build/
 
 # PyBuilder
 target/
-
-# Don't git ignore used C files
-!GeosPy/utilities/levmarq.c

@@ -3,9 +3,10 @@
 
   All rights reserved. See LICENSE file for details
 """
-# import the unittest class that TestGeosPy will inherit
+# python modules
 import unittest
-# import the main class
+import math
+# GeosPy specific modules
 from GeosPy import Geos
 from GeosPy.models import Backstrom
 
@@ -32,36 +33,47 @@ class TestBackstrom(unittest.TestCase):
 
     def test_backstrom_locate_function(self):
         """testing locate function for Backstrom model"""
-        user_location_dict = {'1': (0,0), '2': None, '3':(1,1), '4':(0,0),
+        node_location_dict = {'1': (0,0), '2': None, '3':(1,1), '4':(0,0),
             '5':(0,0), '6':(0,0), '7':(0,0)}
-        user_friend_dict = {'1': frozenset(['2','3']),
+        node_relationship_dict = {'1': frozenset(['2','3']),
             '2': frozenset(['1','3','4','5','6','7']),
             '3':frozenset(['1','3','6']) }
-        output = self.geospy('backstrom').locate(user_location_dict, user_friend_dict)
+        output = self.geospy('backstrom').locate(node_location_dict, node_relationship_dict)
         self.assertEqual(output['2'], (0,0))
 
     def test_backstrom_location_function_using_set_model(self):
         """testing locate function for Backstrom model using set model"""
-        user_location_dict = {'1': (0,0), '2': None, '3':(1,1), '4':(0,0),
+        node_location_dict = {'1': (0,0), '2': None, '3':(1,1), '4':(0,0),
             '5':(0,0), '6':(0,0), '7':(0,0)}
-        user_friend_dict = {'1': frozenset(['2','3']),
+        node_relationship_dict = {'1': frozenset(['2','3']),
             '2': frozenset(['1','3','4','5','6','7']),
             '3':frozenset(['1','3','6']) }
         self.geospy = self.geospy().set_model('backstrom')
-        output = self.geospy.locate(user_location_dict, user_friend_dict)
+        output = self.geospy.locate(node_location_dict, node_relationship_dict)
         self.assertEqual(output['2'], (0,0))
 
     def test_backstrom_train_function(self):
         """testing locate function for Backstrom model using set model"""
-        user_location_dict = {'1': (0,0), '2': None, '3':(1,1), '4':(0,0),
-            '5':(0,0), '6':(0,0), '7':(0,0)}
-        user_friend_dict = {'1': frozenset(['2','3']),
-            '2': frozenset(['1','3','4','5','6','7']),
-            '3':frozenset(['1','3','6'])}
+        # mock node locations
+        node_location_dict = {'1': (0,1), '2': None, '3':(1,1), '4':(0,0),
+            '5':(0,3), '6':(2,0)}
+        # mock node relationships
+        node_relationship_dict = {'1': frozenset(['2','3','4', '5']),
+            '2': frozenset(['1','3','4', '5']),
+            '3': frozenset(['1','2','4', '5']),
+            '4': frozenset(['1','2','3', '5', '6']),
+            '5': frozenset(['1', '2', '3', '4', '6'])}
+
         self.geospy = self.geospy().set_model('backstrom')
-        output = self.geospy.train(user_location_dict, user_friend_dict)
-        # print(output)
-        # self.assertEqual(output['2'], (0,0))
+        output = self.geospy.train(node_location_dict, node_relationship_dict)
+        calculated_a = output.A
+        calculated_b = output.B
+        calculated_c = output.C
+        # TODO: Back compute the default values to create a valid unittest
+        # for now we just need to ensure these values exist
+        self.assertTrue(isinstance(calculated_a, float))
+        self.assertTrue(isinstance(calculated_b, float))
+        self.assertTrue(isinstance(calculated_c, float))
 
     def test_backstrom_train_throw_error(self):
         """testing train function to throw error when no location data available"""
@@ -71,7 +83,7 @@ class TestBackstrom(unittest.TestCase):
 
     def test_backstrom_func_to_fit(self):
         backstrom = Backstrom()
-        func_to_fit = backstrom._test_function_to_fit
+        func_to_fit = backstrom._function_to_fit
         A, B, C = 0.0019, 0.196, -0.015
         self.assertAlmostEqual(func_to_fit(1,A,B,C), 0.00189491)
 
