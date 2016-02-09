@@ -13,11 +13,13 @@ most are verbose and cumbersome.
 
     >>> from GeosPy import Geos
     >>> geosPy = Geos()
-    >>> print geosPy.models
-    ['jakartr', 'backstrom']
+    >>> print(geosPy.models)
+    frozenset({'jakartr', 'backstrom'})
     >>> geosPy = geosPy.set_model('backstrom')
-    >>> print geosPy.locate(user_location_dict, user_friend_dict)
-    (45.5064721, -73.5768498)
+    >>> user_location_dict = {'Tyler': (44, -71.5), 'Fake': None}
+    >>> user_friend_dict = {'Fake':['Tyler']}
+    >>> print(geosPy.locate(user_location_dict, user_friend_dict))
+    {'Tyler': (44, -71.5), 'Fake': (44, -71.5)}
     ...
 
 GeosPy allows you to locate users with unknown locations based solely on
