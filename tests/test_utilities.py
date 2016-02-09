@@ -24,3 +24,12 @@ class TestUtilities(unittest.TestCase):
         # methods, this implementation is "good enough," due to speed concerns
         self.assertAlmostEqual(distance.distance_test(lat1, lon1, lat2, lon2),
             approx_dist, delta=.1)
+
+    def test_distance_function_properly_computes_distance_in_miles_for_long_distances(self):
+        # creating the test-points
+        lat1, lon1 = (35.5800, -82.5558)
+        lat2, lon2 = (35.0117, 135.7683)
+        # externally calculated approx distance in miles
+        approx_dist = 6984
+        self.assertAlmostEqual(distance.distance_test(lat1, lon1, lat2, lon2),
+            approx_dist, delta=15)

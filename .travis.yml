@@ -1,6 +1,4 @@
 language: python
-cache:
-  - pip
 # whitelist
 branches:
     only:
@@ -13,6 +11,12 @@ python:
   - '3.3'
   - '3.4'
   - '3.5'
+
+sudo: required
+# install dependencies
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install libatlas-dev libatlas-base-dev liblapack-dev gfortran libgmp-dev libmpfr-dev ccache libfreetype6-dev libpng-dev zlib1g-dev texlive-fonts-recommended
 # command to install dependencies
 install:
   - pip install --upgrade pip
@@ -23,4 +27,3 @@ before_script:
 # command to run tests
 script:
   - python -m unittest
-# cache pip installs (cython takes awhile to build), after script
