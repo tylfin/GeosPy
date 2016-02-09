@@ -22,19 +22,18 @@ most are verbose and cumbersome.
     {'Tyler': (44, -71.5), 'Fake': (44, -71.5)}
     ...
 
-GeosPy allows you to locate users with unknown locations based solely on
-network-based relationships with the method of your choice. Network-based
-geolocation inference can be 25% or more effective in locating users
-than standard IP-address based inference.
+GeosPy is based off of `Jurgens et al. (2015)`_, implementing state-of-the-art
+methods for geolocation inference. It allows the user to locate nodes with unknown locations
+based solely on network-based relationships.
 
 
 Features
 --------
 
 - Python3.3, 3.4 and 3.5 Support
-- Highly optimized Cython code
-- Full unittest code coverage
-- Multiple methods
+- Highly optimized cython code
+- State-of-the-art methods
+- Code coverage
 
 
 Installation
@@ -59,3 +58,4 @@ Contribute
 
 .. _the repository: http://github.com/tylfin/GeosPy
 .. _AUTHORS: https://github.com/tylfin/GeosPy/blob/master/AUTHORS
+.. _Jurgens et al. (2015): http://www-cs.stanford.edu/~jurgens/docs/jurgens-et-al_icwsm-2015.pdf
