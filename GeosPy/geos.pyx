@@ -48,7 +48,8 @@ cdef class Geos:
 
     cpdef public train(self, user_location_dict, user_friend_dict):
         """extended by models to allow for supervised/semi-supervised learning features"""
-        return self._model_call('train', user_location_dict, user_friend_dict)
+        self._model = self._model_call('train', user_location_dict, user_friend_dict)
+        return self
 
     cpdef public locate(self, user_location_dict, user_friend_dict):
         """extended by models to locate users given a full user dict and friend dict of freezedsets"""

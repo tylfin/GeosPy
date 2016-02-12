@@ -65,7 +65,7 @@ class TestBackstrom(unittest.TestCase):
             '5': frozenset(['1', '2', '3', '4', '6'])}
 
         self.geospy = self.geospy().set_model('backstrom')
-        output = self.geospy.train(node_location_dict, node_relationship_dict)
+        output = Backstrom().train(node_location_dict, node_relationship_dict)
         calculated_a = output.A
         calculated_b = output.B
         calculated_c = output.C
