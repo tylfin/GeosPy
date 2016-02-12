@@ -30,22 +30,48 @@ based solely on network-based relationships.
 Features
 --------
 
-- Python3.3, 3.4 and 3.5 Support
-- Highly optimized cython code
-- State-of-the-art methods
-- Code coverage
+- State-of-the-art geolocation inference method(s)
+- Supports python 3.3, 3.4 and 3.5
+- Written in cython
+- Test coverage
 
 
 Installation
 ------------
 
-TODO
+To install GeosPy from source run the following commands
 
+.. code-block:: bash
 
+    > git clone https://github.com/tylfin/GeosPy/
+    > cd GeosPy
+    > pip install -r requirements.txt
+    ...
+    Successfully installed ...
+    > make build_inplace
+    ...
+    > make test
+    ...
+    OK
+    > make install
+    ...
+    
+PIP support coming soon!
+    
 Documentation
 -------------
 
-TODO
+The GeosPy library makes one wrapper class Geos available with three public methods:
+
+ - set_model: sets the model to be used by GeosPy
+    - takes as input the name of an available model, and outputs the instatiated class with model set
+    - raises NameError if model not available
+ - train: trains the model (optional in most cases) using the given data
+    - takes as input a key to location (latitude, longitude) or None dictionary, a key to keys dictionary.
+ - locate: runs the model, returning users approximate location
+    - takes as input a key to location (latitude, longitude) or None dictionary, a key to keys dictionary, and outputs a dictionary run against the model.
+    
+That's it! 
 
 
 Contribute
@@ -59,3 +85,4 @@ Contribute
 .. _the repository: http://github.com/tylfin/GeosPy
 .. _AUTHORS: https://github.com/tylfin/GeosPy/blob/master/AUTHORS
 .. _Jurgens et al. (2015): http://www-cs.stanford.edu/~jurgens/docs/jurgens-et-al_icwsm-2015.pdf
+.. _clone the repository: https://help.github.com/articles/cloning-a-repository/
