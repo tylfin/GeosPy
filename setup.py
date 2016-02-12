@@ -34,7 +34,7 @@ config = {
     'url': 'https://github.com/tylfin/GeosPy',
     'download_url': 'https://github.com/tylfin/GeosPy',
     'author_email': 'tylfin@gmail.com',
-    'version': '0.4',
+    'version': '0.1',
     'packages': ['GeosPy', 'GeosPy.utilities', 'GeosPy.models'],
     'scripts': [],
     'name': 'GeosPy',
