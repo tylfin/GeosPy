@@ -16,10 +16,13 @@ most are verbose and cumbersome.
     >>> print(geosPy.models)
     frozenset({'jakartr', 'backstrom'})
     >>> geosPy = geosPy.set_model('backstrom')
-    >>> user_location_dict = {'Tyler': (44, -71.5), 'Fake': None}
-    >>> user_friend_dict = {'Fake':['Tyler']}
+    >>> user_location_dict = {
+    ... 'Tyler': (44, -71.5), 'Tim': (45.5, -73.5), 'Gwyn': (44.5, -89.5), 
+    ... 'Conor':(55.0, -106.0), 'Sam': (25.7, -80.2), 'OffTheGrid': None}
+    >>> user_friend_dict = {'OffTheGrid': ['Tyler', 'Sam', 'Gwyn', 'Conor', 'Tim']}
     >>> print(geosPy.locate(user_location_dict, user_friend_dict))
-    {'Tyler': (44, -71.5), 'Fake': (44, -71.5)}
+    {'Conor': (55.0, -106.0), 'Sam': (25.7, -80.2), 'Tyler': (44, -71.5), 
+    'Gwyn': (44.5, -89.5), 'Tim': (45.5, -73.5), 'OffTheGrid': (45.5, -73.5)}
     ...
 
 GeosPy is based off of `Jurgens et al. (2015)`_, implementing state-of-the-art
