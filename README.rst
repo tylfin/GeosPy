@@ -64,17 +64,7 @@ PIP support coming soon!
 Documentation
 -------------
 
-The GeosPy library makes one wrapper class Geos available with three public methods:
-
- - set_model: sets the model to be used by GeosPy
-    - takes as input the name of an available model, and outputs the instatiated class with model set
-    - raises NameError if model not available
- - train: trains the model (optional in most cases) using the given data
-    - takes as input a key to location (latitude, longitude) or None dictionary, a key to keys dictionary.
- - locate: runs the model, returning users approximate location
-    - takes as input a key to location (latitude, longitude) or None dictionary, a key to keys dictionary, and outputs a dictionary run against the model.
-    
-That's it! 
+GeosPy documentation is provided in the form of a Jupyter notebook. For a basic example of usage, checkout the `introduction`_.
 
 
 Contribute
@@ -89,3 +79,4 @@ Contribute
 .. _AUTHORS: https://github.com/tylfin/GeosPy/blob/master/AUTHORS
 .. _Jurgens et al. (2015): http://www-cs.stanford.edu/~jurgens/docs/jurgens-et-al_icwsm-2015.pdf
 .. _clone the repository: https://help.github.com/articles/cloning-a-repository/
+.. _introduction: https://github.com/tylfin/GeosPy/blob/master/docs/intro.ipynb
