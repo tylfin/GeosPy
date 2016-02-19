@@ -29,6 +29,8 @@ GeosPy is based off of `Jurgens et al. (2015)`_, implementing state-of-the-art
 methods for geolocation inference. It allows the user to locate nodes with unknown locations
 based solely on network-based relationships.
 
+*Geolocation inference* is the identification of the real-world geographic location of an object on Earth based off of available data. GeosPy currently only supports network based inference methods.
+
 
 Features
 --------
@@ -64,7 +66,9 @@ PIP support coming soon!
 Documentation
 -------------
 
-GeosPy documentation is provided in the form of a Jupyter notebook. For a basic example of usage, checkout the `introduction`_.
+GeosPy `documentation`_ is provided in the form of Jupyter notebooks. 
+
+For a basic example of usage, checkout the `introduction`_.
 
 
 Contribute
@@ -80,3 +84,4 @@ Contribute
 .. _Jurgens et al. (2015): http://www-cs.stanford.edu/~jurgens/docs/jurgens-et-al_icwsm-2015.pdf
 .. _clone the repository: https://help.github.com/articles/cloning-a-repository/
 .. _introduction: https://github.com/tylfin/GeosPy/blob/master/docs/intro.ipynb
+.. _documentation: https://github.com/tylfin/GeosPy/blob/master/docs/
