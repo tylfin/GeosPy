@@ -9,6 +9,9 @@ test.sh
 # UNIX file system junk
 .DS_store
 
+# iPython/Jupyter notebook
+.ipynb_checkpoints
+
 # Virtual Environment
 venv/
 
