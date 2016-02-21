@@ -68,7 +68,29 @@ Documentation
 
 GeosPy `documentation`_ is provided in the form of Jupyter notebooks. 
 
-For a basic example of usage, checkout the `introduction`_.
+For a basic usage example, checkout the `introduction`_.
+
+**Directory Structure**::
+
+    ├── GeosPy
+    │   ├── __init__.py
+    │   ├── geos.pyx
+    │   ├── models
+    │   │   ├── __init__.py
+    │   │   ├── backstrom.pyx
+    │   │   └── jakartr.pyx
+    │   └── utilities
+    │       ├── __init__.py
+    │       └── distance.pyx
+    ├── docs
+    │   ├── intro.ipynb
+    │   └── trainModels.ipynb
+    ├── setup.py
+    └── tests
+        ├── __init__.py
+        ├── test_backstrom.py
+        ├── test_geos.py
+        └── test_utilities.py
 
 
 Contribute
