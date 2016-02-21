@@ -5,11 +5,6 @@
 """
 # Cythonized Asset object.
 cimport cython
-# Cython imports
-from cpython cimport array
-from libc.stdlib cimport malloc, free
-# System imports
-import sys, inspect
 # Model imports
 from GeosPy.models import *
 

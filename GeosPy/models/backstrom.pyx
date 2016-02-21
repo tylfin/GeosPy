@@ -15,7 +15,6 @@ from GeosPy.utilities.distance cimport distance
 # python packages
 from collections import defaultdict
 from scipy.optimize import curve_fit
-from functools import partial
 import numpy as np
 
 # ignore numpy settings
